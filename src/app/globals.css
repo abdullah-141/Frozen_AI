@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  cursor: none !important; /* Hide default system cursor */
+}
+
+#custom-cursor {
+  position: fixed;
+  width: 23px; /* Default size */
+  height: 23px; /* Default size */
+  background-color: hsl(var(--primary)); /* Default to primary color for light mode */
+  border-radius: 50%;
+  box-shadow: 0 0 15px 4px hsla(var(--primary), 1); /* Glow color 100% opaque */
+  pointer-events: none; /* Allows clicking through the cursor */
+  left: -100px; /* Initially off-screen */
+  top: -100px;  /* Initially off-screen */
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out, width 0.15s ease-out, height 0.15s ease-out, background-color 0.15s ease-out, box-shadow 0.15s ease-out;
+  z-index: 99999; /* Ensure it's on top of everything */
+  opacity: 0; /* Start hidden, made visible by JS */
+}
+
+#custom-cursor.visible {
+  opacity: 1;
+}
+
+/* Interactive state - base styles for light mode */
+#custom-cursor.interactive {
+  transform: translate(-50%, -50%) scale(1.6); /* Scale up slightly */
+  background-color: hsla(var(--primary), 0.7);
+  opacity: 1; /* Ensure full opacity for interactive elements */
+  width: 23px; /* Revert to default size if text-hover was applied */
+  height: 23px;
+  box-shadow: 0 0 18px 5px hsla(var(--primary), 1); /* Glow color 100% opaque */
+}
+
+/* Text hover state - base styles for light mode */
+#custom-cursor.text-hover {
+  width: 32px;
+  height: 32px;
+  opacity: 0.6; /* Overall element opacity for this state */
+  background-color: hsl(var(--primary));
+  box-shadow: 0 0 12px 3px hsla(var(--primary), 1); /* Glow color 100% opaque (will be affected by element opacity) */
+}
+
+
+/* Dark Mode Overrides */
+.dark #custom-cursor {
+  background-color: hsl(145, 63%, 49%); /* Green dot for dark mode */
+  box-shadow: 0 0 15px 4px hsla(145, 63%, 49%, 1); /* Green glow, 100% opaque color */
+}
+
+.dark #custom-cursor.interactive {
+  background-color: hsla(145, 63%, 49%, 0.7); /* Green interactive dot for dark mode */
+  box-shadow: 0 0 18px 5px hsla(145, 63%, 49%, 1); /* Green glow, 100% opaque color */
+  /* Other properties like transform, width, height, opacity are inherited from #custom-cursor.interactive */
+}
+
+.dark #custom-cursor.text-hover {
+  background-color: hsl(145, 63%, 49%); /* Green text-hover dot for dark mode */
+  /* Opacity, width, height are inherited from #custom-cursor.text-hover */
+  box-shadow: 0 0 12px 3px hsla(145, 63%, 49%, 1); /* Green glow, 100% opaque color (will be affected by element opacity) */
+}
+
+
+@layer base {
+  :root {
+    --background: 0 0% 94%; /* Light gray #F0F0F0 */
+    --foreground: 231 15% 18%; /* Dark grayish blue #262A3D */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 231 15% 18%; /* Dark grayish blue */
+    --popover: 0 0% 100%;
+    --popover-foreground: 231 15% 18%;
+    --primary: 231 48% 48%; /* Deep blue #3F51B5 */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 0 0% 90%; /* Lighter gray #E5E5E5 */
+    --secondary-foreground: 231 15% 18%;
+    --muted: 0 0% 85%; /* Medium gray #D9D9D9 */
+    --muted-foreground: 0 0% 40%; /* Darker gray for text on muted */
+    --accent: 230 45% 63%; /* Light purplish blue #7986CB */
+    --accent-foreground: 0 0% 100%; /* White */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 88%; /* Gray #E0E0E0 */
+    --input: 0 0% 88%; /* Gray #E0E0E0 */
+    --ring: 230 45% 63%; /* Accent color for rings */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 230 10% 15%; /* Very dark blue/gray #21242B */
+    --foreground: 0 0% 96%; /* Light gray #F5F5F5 */
+    --card: 230 10% 20%; /* Dark blue/gray #2D3038 */
+    --card-foreground: 0 0% 96%;
+    --popover: 230 10% 20%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 231 48% 58%; /* Lighter deep blue #5C6BC0 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 10% 25%; /* #3A3E47 */
+    --secondary-foreground: 0 0% 96%;
+    --muted: 230 10% 30%; /* #464B55 */
+    --muted-foreground: 0 0% 70%; /* Lighter gray for text on dark muted */
+    --accent: 230 45% 73%; /* Lighter accent #9FA8DA */
+    --accent-foreground: 230 15% 15%; /* Dark text on lighter accent */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 10% 30%;
+    --input: 230 10% 30%;
+    --ring: 230 45% 73%; /* Accent color for rings */
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
